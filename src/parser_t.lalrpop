@@ -1,0 +1,38 @@
+grammar;
+
+DEF:() = r"(?i)def";
+TINT:() = r"(?i)int";
+TFLOAT:() = r"(?i)float";
+TSTRING:() = r"(?i)string";
+
+pub Definitions:() = {
+    definitions
+}
+
+definitions:() = {
+    definitions ";" ( defExpression )?,
+    defExpression,
+}
+
+defExpression:() = {
+    DEF IDENTIFIER ":" typedef
+}
+
+IDENTIFIER:() = r"(?i)[a-z_][a-z0-9_]*"; // (1)
+//IDENTIFIER:() = r"(?i)_[a-z_][a-z0-9_]*"; // (2)
+
+typedef:() = {
+    TINT,
+    TFLOAT,
+    TSTRING,
+}
+
+match {
+    r"(?i)def",
+    r"(?i)int",
+    r"(?i)float",
+    r"(?i)string",
+} else {
+    r"(?i)[a-z_][a-z0-9_]*",
+    _
+}

@@ -1,0 +1,283 @@
+Lalrpop Report File
+========================================
+
+Summary
+----------------------------------------
+
+Constructed 18 states
+
+State Table
+----------------------------------------
+
+State 0 {
+
+    DEF           -> . r#"(?i)def"#
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    Definitions   -> . definitions
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    __Definitions -> . Definitions
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    defExpression -> . DEF IDENTIFIER ":" typedef
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    definitions   -> . defExpression
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    definitions   -> . definitions ";"
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    definitions   -> . definitions ";" defExpression
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    r#"(?i)def"#  shift and goto 5
+
+    DEF           goto 1
+    Definitions   goto 2
+    defExpression goto 3
+    definitions   goto 4
+}
+
+State 1 {
+
+    IDENTIFIER    -> . r#"(?i)[a-z_][a-z0-9_]*"#
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    defExpression -> DEF . IDENTIFIER ":" typedef
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    r#"(?i)[a-z_][a-z0-9_]*"# shift and goto 7
+
+    IDENTIFIER                goto 6
+}
+
+State 2 {
+
+    __Definitions -> Definitions .
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+
+    reduction __Definitions -> Definitions
+        lookahead EOF
+
+
+}
+
+State 3 {
+
+    definitions -> defExpression .
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+
+    reduction definitions -> defExpression
+        lookahead ";" EOF
+
+
+}
+
+State 4 {
+
+    Definitions -> definitions .
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    definitions -> definitions . ";"
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    definitions -> definitions . ";" defExpression
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+
+    reduction Definitions -> definitions
+        lookahead EOF
+
+    ";" shift and goto 8
+
+}
+
+State 5 {
+
+    DEF -> r#"(?i)def"# .
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+
+    reduction DEF -> r#"(?i)def"#
+        lookahead r#"(?i)[a-z_][a-z0-9_]*"#
+
+
+}
+
+State 6 {
+
+    defExpression -> DEF IDENTIFIER . ":" typedef
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    ":" shift and goto 9
+
+}
+
+State 7 {
+
+    IDENTIFIER -> r#"(?i)[a-z_][a-z0-9_]*"# .
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+
+    reduction IDENTIFIER -> r#"(?i)[a-z_][a-z0-9_]*"#
+        lookahead ":"
+
+
+}
+
+State 8 {
+
+    DEF           -> . r#"(?i)def"#
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    defExpression -> . DEF IDENTIFIER ":" typedef
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    definitions   -> definitions ";" .
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    definitions   -> definitions ";" . defExpression
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+
+    reduction definitions -> definitions ";"
+        lookahead ";" EOF
+
+    r#"(?i)def"#  shift and goto 5
+
+    DEF           goto 1
+    defExpression goto 10
+}
+
+State 9 {
+
+    TFLOAT        -> . r#"(?i)float"#
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    TINT          -> . r#"(?i)int"#
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    TSTRING       -> . r#"(?i)string"#
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    defExpression -> DEF IDENTIFIER ":" . typedef
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    typedef       -> . TFLOAT
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    typedef       -> . TINT
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    typedef       -> . TSTRING
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+    r#"(?i)float"#  shift and goto 15
+    r#"(?i)int"#    shift and goto 16
+    r#"(?i)string"# shift and goto 17
+
+    TFLOAT          goto 11
+    TINT            goto 12
+    TSTRING         goto 13
+    typedef         goto 14
+}
+
+State 10 {
+
+    definitions -> definitions ";" defExpression .
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+
+    reduction definitions -> definitions ";" defExpression
+        lookahead ";" EOF
+
+
+}
+
+State 11 {
+
+    typedef -> TFLOAT .
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+
+    reduction typedef -> TFLOAT
+        lookahead ";" EOF
+
+
+}
+
+State 12 {
+
+    typedef -> TINT .
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+
+    reduction typedef -> TINT
+        lookahead ";" EOF
+
+
+}
+
+State 13 {
+
+    typedef -> TSTRING .
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+
+    reduction typedef -> TSTRING
+        lookahead ";" EOF
+
+
+}
+
+State 14 {
+
+    defExpression -> DEF IDENTIFIER ":" typedef .
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+
+    reduction defExpression -> DEF IDENTIFIER ":" typedef
+        lookahead ";" EOF
+
+
+}
+
+State 15 {
+
+    TFLOAT -> r#"(?i)float"# .
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+
+    reduction TFLOAT -> r#"(?i)float"#
+        lookahead ";" EOF
+
+
+}
+
+State 16 {
+
+    TINT -> r#"(?i)int"# .
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+
+    reduction TINT -> r#"(?i)int"#
+        lookahead ";" EOF
+
+
+}
+
+State 17 {
+
+    TSTRING -> r#"(?i)string"# .
+        lookahead ":" ";" r#"(?i)[a-z_][a-z0-9_]*"# r#"(?i)def"# r#"(?i)float"# r#"(?i)int"# r#"(?i)string"# EOF
+
+
+    reduction TSTRING -> r#"(?i)string"#
+        lookahead ";" EOF
+
+
+}

@@ -1,0 +1,94 @@
+/*
+    default types
+        null - null value, i.e. null do not have type,
+            null
+        bool - boolean value
+            true | false
+        int - integer value
+            [-+]?[0-9]+
+        float - float value
+            [-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
+        number - int | float
+        string - string value
+            "([^"]|([\\]["]))*" | '([^']|([\\][']))*'
+        [ ] - array
+        { } - object
+        value - bool | number | string | [] | {}
+
+    special words are 'def', 'where'
+
+    where clause ops:
+        
+        >  - greater
+        >= - greater or equal
+        <
+        =<
+        == - equal
+        != - not equal
+        =~ - regexp match
+        !~ - regexp not match
+
+        in
+        not in
+        like
+        not like
+        ilike
+        not ilike
+        and, or, not
+
+        def cl0: int where $ in ( 1 3 6 ) or $ > 10;
+
+*/
+
+def <id>: <defenition>;
+
+where <defenition> is:
+<typedef> [| ... ]
+where <typedef> one of:
+<defaulttype>
+<usertypeid>
+
+where <defaulttype> 
+
+def cmd0: string where value = "create";
+def cmd1: string where value in ( "scheme" "machine" "trigger" );
+def cmd2: string where value = "with";
+def cmd3: {};
+def command: ( req cmd0; req cmd1; cmd3; );
+def command: (
+    req string where value = "create";
+    req string where value in ( "scheme" "machine" "trigger" );
+    string where value = "with";
+    {};
+);
+
+def nulable_int: null | int;
+def nullable_intarr: null | [ int ] | { a : string; }
+
+def tpl: ( int; string; )
+
+def cl0: int;
+def cl0: int where $ in ( 1 3 6 ) or $ > 10;
+
+def cl1: int | string;
+def cl2: [];
+def cl3: [ int ];
+def cl3: [ int where $ < 10 or $ > 10 ];
+def cl3:[cl1|cl2;24];
+
+def cl4: [ string; 24 ];
+def cl5: [ cl1; 24 ];
+
+range expression
+start..end  start ≤ x < end
+start..     start ≤ x
+..end       x < end
+start..=end start ≤ x ≤ end
+..=end      x ≤ end 
+
+
+def class : {
+    required id: int;
+    required type: int where value in ( 0 1 2 3 );
+    name: string;
+}

@@ -1,0 +1,23 @@
+use ast::Literals;
+
+grammar;
+
+//
+//pub Term: Literals = {
+//    <n:Number> => n,
+//    "(" <t:Term> ")" => t,
+//};
+//
+
+
+pub Term = {
+    Decimal,
+    "(" Term ")",
+};
+
+//Number = {
+//    Decimal, Hex
+//}
+
+Decimal: Literals = <s:r"[-+]?[0-9]+"> => Literals::DecimalLiteral; //i32::from_str(s).unwrap();
+//Hex: Literals = <s:r"0[xX][0-9a-fA-F]+"> => Literals::HexLiteral; //i32::from_str(s).unwrap();

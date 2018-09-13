@@ -1,0 +1,194 @@
+//use ast;
+
+grammar;
+
+DEF:() = r"(?i)def";
+TNULL:() = r"(?i)null";
+TINT:() = r"(?i)int";
+TFLOAT:() = r"(?i)float";
+TNUMBER:() = r"(?i)number";
+TSTRING:() = r"(?i)string";
+REQ:() = r"(?i)req";
+WHERE:() = r"(?i)where";
+OR:() = r"(?i)or";
+AND:() = r"(?i)and";
+NOT:() = r"(?i)not";
+EQ:() = { ">", ">=", "==", "<=", "<", "<>", }
+RX:() = "=~";
+IN:() = r"(?i)in";
+LIKE:() = r"(?i)like";
+ILIKE:() = r"(?i)ilike";
+ESCAPE:() = r"(?i)escape";
+SUM:() = { "+", "-", };
+MUL:() = { "*", "/", "%" };
+DEC:() = r"[-+]?[1-9][0-9]*";
+HEX:() = r"0[xX][0-9a-fA-F]+";
+OCT:() = r"[0][0-7]*";
+FLOAT:() = r"[-+]?[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?";
+STR:() = r#"["][^"]*["]"#;
+RSTR:() = r#"r["][^"]*["]"#;
+
+IDENTIFIER:() = r"(?i)[a-z][a-z0-9_]*";
+
+match {
+    r"(?i)def",
+    r"(?i)null",
+    r"(?i)int",
+    r"(?i)float",
+    r"(?i)number",
+    r"(?i)string",
+    r"(?i)req",
+    r"(?i)where",
+    r"(?i)or",
+    r"(?i)and",
+    r"(?i)not",
+    r"(?i)in",
+    r"(?i)like",
+    r"(?i)ilike",
+    r"(?i)escape",
+} else {
+    _
+}
+
+pub Definitions:() = {
+    Definitions ";" ( defExpression )?,
+    defExpression,
+}
+
+defExpression:() = {
+    DEF IDENTIFIER ":" typeDefinition
+}
+
+typeDefinition:() = {
+    typeDefinition "|" typeConstrains,
+    typeConstrains,
+}
+
+typeConstrains:() = {
+    TNULL,
+    "{" ( objectDefenition )? "}",
+    "[" ( arrayDefenition )? "]",
+    "(" ( tupleDefenition )? ")",
+    simpleTypeConstrains,
+}
+
+objectDefenition:() = {
+    objectDefenition "," ( fieldDefenition )? ,
+    fieldDefenition
+}
+
+fieldDefenition:() = {
+    ( REQ )? IDENTIFIER ":" typeDefinition,
+}
+
+arrayDefenition:() = {
+    typeDefinition ( ";" rangeExp )?
+}
+
+rangeExp:() = {
+    intConstExpr ".."  intConstExpr,
+    intConstExpr ".." ,
+    ".."  intConstExpr,
+    intConstExpr,
+}
+
+intConstExpr:() = {
+    DEC,
+    HEX,
+    OCT,
+}
+
+tupleDefenition:() = {
+    tupleDefenition "," ( typeDefinition )? ,
+    typeDefinition,
+}
+
+simpleTypeConstrains:() = {
+    simpleTypeExpr WHERE orExpression,
+    simpleTypeExpr,
+}
+
+simpleTypeExpr:() = {
+    TINT, TFLOAT, TNUMBER, TSTRING,
+};
+
+orExpression:() = {
+    orExpression OR andExpression,
+    andExpression,
+}
+
+andExpression:() = {
+    andExpression AND equalityExpression,
+    equalityExpression,
+}
+
+equalityExpression:() = {
+    sumExpression EQ sumExpression,
+    sumExpression RX stringExpr,
+    sumExpression inExpression,
+    sumExpression likeExpression,
+    "(" orExpression ")",
+}
+
+inExpression:() = {
+    NOT IN "(" constExprList ")",
+    IN "(" constExprList ")",
+}
+
+likeExpression:() = {
+    NOT ILIKE stringExpr ESCAPE stringExpr,
+    NOT LIKE stringExpr ESCAPE stringExpr,
+    ILIKE stringExpr
+    LIKE stringExpr
+}
+
+constExprList:() = {
+    constExprList constExpr,
+    constExpr,
+}
+
+sumExpression:() = {
+    sumExpression SUM mulExpression,
+    mulExpression
+}
+
+mulExpression:() = {
+    mulExpression MUL unaryExpr,
+    unaryExpr
+}
+
+unaryExpr:() = {
+    "+" termExpr,
+    "-" termExpr,
+    NOT termExpr,
+    termExpr,
+}
+
+termExpr:() = {
+    constExpr,
+    valExpression,
+    "(" sumExpression ")",
+}
+
+constExpr:() = {
+    numberExpr,
+    stringExpr,
+}
+
+numberExpr:() = {
+    DEC,
+    HEX,
+    OCT,
+    FLOAT
+}
+
+stringExpr:() = {
+    STR, RSTR
+}
+
+valExpression:() = {
+    "$",
+    "v",
+    "val",
+    "value",
+}
